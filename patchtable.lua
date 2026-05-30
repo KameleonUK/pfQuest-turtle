@@ -177,3 +177,159 @@ updatecheck:SetScript("OnEvent", function()
     pfQuest_turtlecount = count
   end
 end)
+
+-- Returns the chain position and total length for a quest, or nil if not in a chain.
+-- Walks backward via ["pre"] to the root, then forward via reverse-pre to count length.
+-- Guards against loops with a visited set. Only fires for same-name chains.
+local function GetQuestChainInfo(id)
+  local qdata = pfDB["quests"]["data"]
+  local qloc  = pfDB["quests"]["loc"]
+  if not qdata or not qloc then return nil end
+
+  local name = qloc[id] and qloc[id]["T"]
+  if not name then return nil end
+
+  -- Walk backward to find the root (quest with no pre, or whose pre has a different name)
+  local pos     = 1
+  local visited = { [id] = true }
+  local current = id
+  while true do
+    local pre = qdata[current] and qdata[current]["pre"]
+    if not pre then break end
+    -- use first pre-req only (handles convergent chains gracefully)
+    local preId = pre[1]
+    if not preId or visited[preId] then break end
+    local preName = qloc[preId] and qloc[preId]["T"]
+    if preName ~= name then break end  -- chain boundary: different quest name
+    visited[preId] = true
+    pos     = pos + 1
+    current = preId
+  end
+  local root = current
+
+  -- Walk forward from root: find all quests whose pre chain leads back here
+  -- Build a successor map for same-name quests only (scan once per hover is fine
+  -- for chains that are at most ~10 long in practice)
+  local chain  = { root }
+  local seen   = { [root] = true }
+  local tip    = root
+  local safety = 0
+  while safety < 20 do
+    safety = safety + 1
+    local found = nil
+    for qid, qd in pairs(qdata) do
+      if not seen[qid] and qd["pre"] then
+        for _, preId in pairs(qd["pre"]) do
+          if preId == tip then
+            local qname = qloc[qid] and qloc[qid]["T"]
+            if qname == name then
+              found = qid
+              break
+            end
+          end
+        end
+      end
+      if found then break end
+    end
+    if not found then break end
+    seen[found] = true
+    table.insert(chain, found)
+    tip = found
+  end
+
+  local total = table.getn(chain)
+  if total < 2 then return nil end  -- single quest, not a chain worth labelling
+  -- find our position in the ordered chain
+  for i, qid in ipairs(chain) do
+    if qid == id then return i, total end
+  end
+  return pos, total
+end
+
+-- Extend ShowExtendedTooltip to append chain position and "Introduced in: X".
+-- Uses manual wrap since hooksecurefunc on table methods is not available in 1.12.
+local _ShowExtendedTooltip = pfDatabase.ShowExtendedTooltip
+function pfDatabase:ShowExtendedTooltip(id, tooltip, parent, anchor, offx, offy)
+  _ShowExtendedTooltip(self, id, tooltip, parent, anchor, offx, offy)
+  local tt = tooltip or GameTooltip
+
+  local part, total = GetQuestChainInfo(id)
+  if part then
+    tt:AddLine("|cffaaaaaa" .. "Part " .. part .. " of " .. total .. "|r")
+  end
+
+  local patch = pfDB["quests"]["patch"] and pfDB["quests"]["patch"][id]
+  if patch then
+    if not part then tt:AddLine(" ") end
+    tt:AddLine("|cffaaaaaa" .. "Introduced in: " .. patch .. "|r")
+  end
+
+  if part or patch then tt:Show() end
+end
+
+-- Wraps GameTooltip:SetText to append " +" to the NPC name for elite/rare-elite.
+-- Guarded to only fire when hovering a pfQuest units result button.
+local _GameTooltipSetText = GameTooltip.SetText
+function GameTooltip:SetText(text, r, g, b, a, wordWrap)
+  local focus = GetMouseFocus()
+  if focus and focus.pfResultButton and focus.btype == "units" and focus.id then
+    local rnk = pfDB["units"]["data"][focus.id] and pfDB["units"]["data"][focus.id]["rnk"]
+    -- rnk "1" = elite, "2" = rare elite; both get a + on the name
+    if (rnk == "1" or rnk == "2") and text == focus.name then
+      text = text .. " +"
+    end
+  end
+  _GameTooltipSetText(self, text, r, g, b, a, wordWrap)
+end
+
+-- Extend the NPC tooltip in the browser to append rank, coords (single-zone only)
+-- and "Introduced in: X". Units are rendered inline in a local function in
+-- browser.lua so we wrap GameTooltip:Show and check GetMouseFocus().
+local _GameTooltipShow = GameTooltip.Show
+function GameTooltip:Show()
+  local focus = GetMouseFocus()
+  if focus and focus.pfResultButton and focus.btype == "units" and focus.id then
+    local id       = focus.id
+    local unitData = pfDB["units"]["data"][id]
+    local rnk      = unitData and unitData["rnk"]
+
+    -- "Rare" label: rnk "2" = rare elite, "4" = rare
+    if rnk == "2" or rnk == "4" then
+      self:AddLine("|cffc0c0c0Rare|r")
+    end
+
+    -- Coords: only show when all spawn points are in exactly one zone
+    if unitData and unitData["coords"] then
+      local zoneId     = nil
+      local singleZone = true
+      local sumX, sumY, count = 0, 0, 0
+
+      for _, c in pairs(unitData["coords"]) do
+        local czone = c[3]
+        if zoneId == nil then
+          zoneId = czone
+        elseif czone ~= zoneId then
+          singleZone = false
+          break
+        end
+        sumX  = sumX  + c[1]
+        sumY  = sumY  + c[2]
+        count = count + 1
+      end
+
+      if singleZone and count > 0 then
+        local avgX = math.floor((sumX / count) * 10 + 0.5) / 10
+        local avgY = math.floor((sumY / count) * 10 + 0.5) / 10
+        self:AddLine("|cffaaaaaa" .. avgX .. ", " .. avgY .. "|r")
+      end
+    end
+
+    -- "Introduced in:" patch tag
+    local patch = pfDB["units"]["patch"] and pfDB["units"]["patch"][id]
+    if patch then
+      self:AddLine(" ")
+      self:AddLine("|cffaaaaaa" .. "Introduced in: " .. patch .. "|r")
+    end
+  end
+  _GameTooltipShow(self)
+end

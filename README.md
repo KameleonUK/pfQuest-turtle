@@ -5,6 +5,10 @@ This AddOn is a [pfQuest](https://github.com/shagu/pfQuest) extension, which add
 
 If you wish to contribute, please feel free to send a [Pull Requests](https://github.com/shagu/pfQuest-turtle/pulls).
 
+### Regarding 1.18.1
+
+The 1.18.1 data is provided as-is from a scrape of TurtleWoW's database website and is subject to change with the availability of a more complete dataset.
+
 ## Install
 *The latest version of [pfQuest](https://shagu.org/pfQuest) is required for this module to work.*
 

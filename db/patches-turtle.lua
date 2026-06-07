@@ -1,4 +1,4 @@
-pfDB["quests"]["patch"] = {
+﻿pfDB["quests"]["patch"] = {
   -- Quests introduced in Turtle WoW 1.18.1 (absent from 1.17 quests-turtle.lua)
   [41898] = "1.18.1",
   [41899] = "1.18.1",

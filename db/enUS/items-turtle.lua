@@ -1,4 +1,4 @@
-pfDB["items"]["enUS-turtle"] = {
+﻿pfDB["items"]["enUS-turtle"] = {
   [1] = "Spring White Rabbit Headband",
   [2] = "Ebon Gryphon",
   [3] = "Snowy Gryphon",

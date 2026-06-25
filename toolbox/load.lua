@@ -10,7 +10,7 @@ function smalltable(tbl)
   if size > 10 then return end
   if size < 1 then return end
 
-  for i=1, size do
+  for i = 1, size do
     if not tbl[i] then return end
     if type(tbl[i]) == "table" then return end
   end
@@ -39,24 +39,24 @@ function sanitize_table(tbl)
   end
 end
 
-function __genOrderedIndex( t )
+function __genOrderedIndex(t)
   local orderedIndex = {}
   for key in pairs(t) do
-    table.insert( orderedIndex, key )
+    table.insert(orderedIndex, key)
   end
-  table.sort( orderedIndex )
+  table.sort(orderedIndex)
   return orderedIndex
 end
 
 function orderedNext(t, state)
   local key = nil
   if state == nil then
-    t.__orderedIndex = __genOrderedIndex( t )
+    t.__orderedIndex = __genOrderedIndex(t)
     key = t.__orderedIndex[1]
   else
-    for i = 1,#t.__orderedIndex do
+    for i = 1, #t.__orderedIndex do
       if t.__orderedIndex[i] == state then
-        key = t.__orderedIndex[i+1]
+        key = t.__orderedIndex[i + 1]
       end
     end
   end
@@ -144,35 +144,34 @@ function serialize(file, name, tbl, spacing, flat)
     file:write(spacing .. name .. " = {\n")
 
     for k, v in opairs(tbl) do
-      local prefix = "["..k.."]"
+      local prefix = "[" .. k .. "]"
       if type(k) == "string" then
-        prefix = "[\""..k.."\"]"
+        prefix = "[\"" .. k .. "\"]"
       end
 
       if type(v) == "table" and flat then
-        file:write("  "..spacing..prefix .. " = {},\n")
+        file:write("  " .. spacing .. prefix .. " = {},\n")
       elseif type(v) == "table" and smalltable(v) then
         local init
-        local line = spacing.."  "..prefix.." = { "
+        local line = spacing .. "  " .. prefix .. " = { "
         for _, v in pairs(v) do
-          line = line .. (init and ", " or "") .. (type(v) == "string" and "\""..v.."\"" or v)
+          line = line .. (init and ", " or "") .. (type(v) == "string" and "\"" .. v .. "\"" or v)
           if not init then
             init = true
           end
         end
         line = line .. " },\n"
         file:write(line)
-
       elseif type(v) == "table" then
         serialize(file, prefix, v, spacing .. "  ")
       elseif type(v) == "string" then
-        file:write("  "..spacing..prefix .. " = " .. "\"" .. v .. "\",\n")
+        file:write("  " .. spacing .. prefix .. " = " .. "\"" .. v .. "\",\n")
       elseif type(v) == "number" then
-        file:write("  "..spacing..prefix .. " = " .. v .. ",\n")
+        file:write("  " .. spacing .. prefix .. " = " .. v .. ",\n")
       end
     end
 
-    file:write(spacing.."}" .. (not closehandle and "," or "") .. "\n")
+    file:write(spacing .. "}" .. (not closehandle and "," or "") .. "\n")
   end
 
   if closehandle then file:close() end
@@ -188,22 +187,22 @@ pfDB = {
   ["refloot"] = {},
   ["quests"] = {},
   ["quests-itemreq"] = {},
-  ["zones"] = {},
   ["minimap"] = {},
   ["meta"] = {},
   ["zones"] = {},
   ["professions"] = {},
 }
 
-local list = { "areatrigger", "units", "objects", "items", "refloot", "quests", "quests-itemreq", "zones", "minimap", "meta" }
+local list = { "areatrigger", "units", "objects", "items", "refloot", "quests", "quests-itemreq", "zones", "minimap",
+  "meta" }
 local loclist = { "items", "objects", "professions", "quests", "units", "zones" }
 
 for id, name in pairs(list) do
-  dofile("pfQuest-fork/db/"..name..".lua")
+  dofile("pfQuest-fork/db/" .. name .. ".lua")
 end
 
 for id, name in pairs(loclist) do
-  dofile("pfQuest-fork/db/enUS/"..name..".lua")
+  dofile("pfQuest-fork/db/enUS/" .. name .. ".lua")
 end
 
 sanitize_table(pfDB)
@@ -220,7 +219,6 @@ pfDB = {
   ["refloot"] = {},
   ["quests"] = {},
   ["quests-itemreq"] = {},
-  ["zones"] = {},
   ["minimap"] = {},
   ["meta"] = {},
   ["zones"] = {},
@@ -228,11 +226,11 @@ pfDB = {
 }
 
 for id, name in pairs(list) do
-  dofile("pfQuest/db/"..name..".lua")
+  dofile("pfQuest/db/" .. name .. ".lua")
 end
 
 for id, name in pairs(loclist) do
-  dofile("pfQuest/db/enUS/"..name..".lua")
+  dofile("pfQuest/db/enUS/" .. name .. ".lua")
 end
 
 sanitize_table(pfDB)
@@ -267,20 +265,28 @@ local loc = "enUS"
 local exp = "-turtle"
 local data = "data-turtle"
 
-serialize(string.format("../db/areatrigger%s.lua", exp), "pfDB[\"areatrigger\"][\""..data.."\"]", pfDB["areatrigger"][data])
-serialize(string.format("../db/units%s.lua", exp), "pfDB[\"units\"][\""..data.."\"]", pfDB["units"][data])
-serialize(string.format("../db/objects%s.lua", exp), "pfDB[\"objects\"][\""..data.."\"]", pfDB["objects"][data])
-serialize(string.format("../db/items%s.lua", exp), "pfDB[\"items\"][\""..data.."\"]", pfDB["items"][data])
-serialize(string.format("../db/refloot%s.lua", exp), "pfDB[\"refloot\"][\""..data.."\"]", pfDB["refloot"][data])
-serialize(string.format("../db/quests%s.lua", exp), "pfDB[\"quests\"][\""..data.."\"]", pfDB["quests"][data])
-serialize(string.format("../db/quests-itemreq%s.lua", exp), "pfDB[\"quests-itemreq\"][\""..data.."\"]", pfDB["quests-itemreq"][data])
-serialize(string.format("../db/zones%s.lua", exp), "pfDB[\"zones\"][\""..data.."\"]", pfDB["zones"][data])
-serialize(string.format("../db/minimap%s.lua", exp), "pfDB[\"minimap"..exp.."\"]", pfDB["minimap"..exp])
-serialize(string.format("../db/meta%s.lua", exp), "pfDB[\"meta"..exp.."\"]", pfDB["meta"..exp])
+serialize(string.format("../db/areatrigger%s.lua", exp), "pfDB[\"areatrigger\"][\"" .. data .. "\"]",
+  pfDB["areatrigger"][data])
+serialize(string.format("../db/units%s.lua", exp), "pfDB[\"units\"][\"" .. data .. "\"]", pfDB["units"][data])
+serialize(string.format("../db/objects%s.lua", exp), "pfDB[\"objects\"][\"" .. data .. "\"]", pfDB["objects"][data])
+serialize(string.format("../db/items%s.lua", exp), "pfDB[\"items\"][\"" .. data .. "\"]", pfDB["items"][data])
+serialize(string.format("../db/refloot%s.lua", exp), "pfDB[\"refloot\"][\"" .. data .. "\"]", pfDB["refloot"][data])
+serialize(string.format("../db/quests%s.lua", exp), "pfDB[\"quests\"][\"" .. data .. "\"]", pfDB["quests"][data])
+serialize(string.format("../db/quests-itemreq%s.lua", exp), "pfDB[\"quests-itemreq\"][\"" .. data .. "\"]",
+  pfDB["quests-itemreq"][data])
+serialize(string.format("../db/zones%s.lua", exp), "pfDB[\"zones\"][\"" .. data .. "\"]", pfDB["zones"][data])
+serialize(string.format("../db/minimap%s.lua", exp), "pfDB[\"minimap" .. exp .. "\"]", pfDB["minimap" .. exp])
+serialize(string.format("../db/meta%s.lua", exp), "pfDB[\"meta" .. exp .. "\"]", pfDB["meta" .. exp])
 
-serialize(string.format("../db/%s/units%s.lua", loc, exp), "pfDB[\"units\"][\""..loc..exp.."\"]", pfDB["units"][loc..exp])
-serialize(string.format("../db/%s/objects%s.lua", loc, exp), "pfDB[\"objects\"][\""..loc..exp.."\"]", pfDB["objects"][loc..exp])
-serialize(string.format("../db/%s/items%s.lua", loc, exp), "pfDB[\"items\"][\""..loc..exp.."\"]", pfDB["items"][loc..exp])
-serialize(string.format("../db/%s/quests%s.lua", loc, exp), "pfDB[\"quests\"][\""..loc..exp.."\"]", pfDB["quests"][loc..exp])
-serialize(string.format("../db/%s/professions%s.lua", loc, exp), "pfDB[\"professions\"][\""..loc..exp.."\"]", pfDB["professions"][loc..exp])
-serialize(string.format("../db/%s/zones%s.lua", loc, exp), "pfDB[\"zones\"][\""..loc..exp.."\"]", pfDB["zones"][loc..exp])
+serialize(string.format("../db/%s/units%s.lua", loc, exp), "pfDB[\"units\"][\"" .. loc .. exp .. "\"]",
+  pfDB["units"][loc .. exp])
+serialize(string.format("../db/%s/objects%s.lua", loc, exp), "pfDB[\"objects\"][\"" .. loc .. exp .. "\"]",
+  pfDB["objects"][loc .. exp])
+serialize(string.format("../db/%s/items%s.lua", loc, exp), "pfDB[\"items\"][\"" .. loc .. exp .. "\"]",
+  pfDB["items"][loc .. exp])
+serialize(string.format("../db/%s/quests%s.lua", loc, exp), "pfDB[\"quests\"][\"" .. loc .. exp .. "\"]",
+  pfDB["quests"][loc .. exp])
+serialize(string.format("../db/%s/professions%s.lua", loc, exp), "pfDB[\"professions\"][\"" .. loc .. exp .. "\"]",
+  pfDB["professions"][loc .. exp])
+serialize(string.format("../db/%s/zones%s.lua", loc, exp), "pfDB[\"zones\"][\"" .. loc .. exp .. "\"]",
+  pfDB["zones"][loc .. exp])

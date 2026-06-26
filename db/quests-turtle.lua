@@ -70883,6 +70883,7 @@ pfDB["quests"]["data-turtle"] = {
     ["end"] = {
       ["U"] = { 63209 },
     },
+    ["event"] = 99,
     ["lvl"] = 5,
     ["min"] = 5,
     ["race"] = 589,
@@ -70894,6 +70895,7 @@ pfDB["quests"]["data-turtle"] = {
     ["end"] = {
       ["U"] = { 63210 },
     },
+    ["event"] = 99,
     ["lvl"] = 5,
     ["min"] = 5,
     ["race"] = 434,

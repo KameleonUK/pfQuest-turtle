@@ -5930,6 +5930,7 @@ pfDB["units"]["enUS-turtle"] = {
   [62839] = "Brolan Windhorn",
   [62842] = "Nuhlgahn Windhorn",
   [62851] = "Heghala",
+  [62852] = "Fena Ma'dar",
   [62899] = "Olgra",
   [62900] = "Arch Druid Renethra Moonwater",
   [62901] = "Sentinel Commander Silverstreak",

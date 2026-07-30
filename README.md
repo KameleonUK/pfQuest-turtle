@@ -12,7 +12,7 @@ If you wish to contribute, please feel free to send a [Pull Requests](https://gi
 The 1.18.1 data is provided as-is from a scrape of TurtleWoW's database website and is subject to change with the availability of a more complete dataset.
 
 ## Install
-*The latest version of [pfQuest](https://shagu.org/pfQuest) is required for this module to work.*
+*The latest version of [pfQuest]([https://shagu.org/pfQuest](https://github.com/The-Kludge-Bureau/pfQuest)) is recommended for this module to work.*
 
 1. Download **[pfQuest-turtle](https://github.com/shagu/pfQuest-turtle/archive/master.zip)**
 2. Unpack the Zip file

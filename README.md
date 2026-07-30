@@ -14,8 +14,8 @@ The 1.18.1 data is provided as-is from a scrape of TurtleWoW's database website 
 ## Install
 *The latest version of [pfQuest]([https://shagu.org/pfQuest](https://github.com/The-Kludge-Bureau/pfQuest)) is recommended for this module to work.*
 
-1. Download **[pfQuest-turtle](https://github.com/shagu/pfQuest-turtle/archive/master.zip)**
+1. Download **[pfQuest-turtle](https://github.com/KameleonUK/pfQuest-turtle/archive/refs/heads/main.zip)**
 2. Unpack the Zip file
-3. Rename the folder "pfQuest-turtle-master" to "pfQuest-turtle"
+3. Rename the folder "pfQuest-turtle-main" to "pfQuest-turtle"
 4. Copy "pfQuest-turtle" into Wow-Directory\Interface\AddOns
 5. Restart Wow

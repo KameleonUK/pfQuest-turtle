@@ -31395,8 +31395,8 @@ pfDB["quests"]["enUS-turtle"] = {
     ["T"] = "Gathering the Cure",
   },
   [6124] = {
-    ["O"] =
-    "Use the Curative Animal Salve on 10 Sickly Deer that are located throughout Darkshore; doing so should cure them.  Sickly Deer have been reported starting south of the Cliffspring River to the north of Auberdine and extending all the way into southern Darkshore where the edge of Ashenvale begins.",
+    ["D"] = "The amount of salve made out of the reagents you brought me is good enough for ten doses, $N.  While I work with the village to try and make some more salve, I\'d like for you to help us get a head start.  All around Darkshore are sickly deer; use the salve on them and cure their malaise.$B$BDendrite Starblaze in Moonglade will want to talk to you when you\'re done, I\'m sure.  Please extend Auberdine\'s thanks to the Cenarion Circle there... and let me say thanks to you directly for the help you\'ve given!",
+    ["O"] = "Use the Curative Animal Salve on 10 Sickly Deer that are located throughout Darkshore; doing so should cure them.  Sickly Deer have been reported starting south of the Cliffspring River to the north of Auberdine and extending all the way into southern Darkshore where the edge of Ashenvale begins.",
     ["T"] = "Curing the Sick",
   },
   [6125] = {
@@ -31425,8 +31425,8 @@ pfDB["quests"]["enUS-turtle"] = {
     ["T"] = "Gathering the Cure",
   },
   [6129] = {
-    ["O"] =
-    "Use the Curative Animal Salve on 10 Sickly Gazelles that are located throughout the northern part of the Barrens; doing so should cure them.  Sickly Gazelles have been reported north of the east-west road that runs through the Crossroads.",
+    ["D"] = "I was able to make enough salve for ten doses of curing, $N.  While I work with local authorities to try and make some more salve, I\'d like for you to help us get a head start.  All around the northern Barrens are sickly gazelles; use the salve on them and cure their malaise.$B$BDendrite Starblaze in Moonglade will want to talk to you when you\'re done, I\'m sure.  Please extend our thanks to the Cenarion Circle there... and let me say thanks to you directly for the help you\'ve given!",
+    ["O"] = "Use the Curative Animal Salve on 10 Sickly Gazelles that are located throughout the northern part of the Barrens; doing so should cure them.  Sickly Gazelles have been reported north of the east-west road that runs through the Crossroads.",
     ["T"] = "Curing the Sick",
   },
   [6130] = {

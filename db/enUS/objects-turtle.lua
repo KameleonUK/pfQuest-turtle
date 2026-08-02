@@ -703,6 +703,7 @@ pfDB["objects"]["enUS-turtle"] = {
   [1000502] = "Brightwater Lockbox",
   [1000503] = "Sealed Trunk",
   [1000504] = "WANTED!",
+  [1000505] = "WANTED!",
   [1000510] = "Sealed Documents Crate",
   [1000511] = "Chest of Discarded Goods",
   [1000512] = "Demon Gate",

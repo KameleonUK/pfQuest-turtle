@@ -68686,6 +68686,7 @@ pfDB["quests"]["data-turtle"] = {
     ["end"] = {
       ["U"] = { 62795 },
     },
+    ["repeatable"] = true,
     ["lvl"] = 55,
     ["min"] = 48,
     ["obj"] = {

@@ -71,6 +71,32 @@ function pfMap:HasMinimap(map_id)
   return has_minimap
 end
 
+-- Re-link the live locale references after merging the TurtleWoW data.
+--
+-- pfQuest's database.lua assigns pfDB[db]["loc"] = pfDB[db][locale] at load,
+-- and its unlocalized-server check (database.lua ~256-294) can reassign those
+-- references again a few seconds after login. On some custom clients this
+-- leaves pfDB[db]["loc"] pointing at a table that missed the turtle merge --
+-- e.g. pfDB["zones"]["enUS"][5179] = "Gilneas" is present but
+-- pfDB["zones"]["loc"][5179] is nil -- so custom-zone maps render no nodes and
+-- their quests appear "unknown". Re-point loc to the merged locale/enUS table
+-- now, and once more when the locale check finishes.
+local function relink_locales()
+  for _, db in pairs(dbs) do
+    pfDB[db]["loc"] = pfDB[db][loc] or pfDB[db]["enUS"] or pfDB[db]["loc"] or {}
+  end
+end
+relink_locales()
+
+local relink = CreateFrame("Frame")
+relink:SetScript("OnUpdate", function()
+  if pfDatabase.localized then
+    relink_locales()
+    pfDatabase:Reload()
+    this:Hide()
+  end
+end)
+
 -- Reload all pfQuest internal database shortcuts
 pfDatabase:Reload()
 

@@ -56,7 +56,7 @@ if pfDB.bitraces then
 end
 
 -- Use turtle-wow database url
-pfQuest.dburl = "https://database.turtlecraft.gg/?quest="
+pfQuest.dburl = "https://octowow.st/db/?quest="
 
 -- Disable Minimap in custom dungeon maps
 function pfMap:HasMinimap(map_id)

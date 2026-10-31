@@ -52,6 +52,13 @@ do -- items
 end
 
 do -- quests
+  -- The Need to Survive: the exported quest is missing its kill objectives.
+  local survive = pfDB["quests"]["data-turtle"][41967]
+  if survive then
+    survive["obj"] = survive["obj"] or {}
+    survive["obj"]["U"] = { 4124, 4248 }
+  end
+
   -- Add "Dark Iron Gunpowder Keg" to objectives of "Vile Dwarven Pigs"
   -- The extractor scripts did not catch those, as the objetive is filled via a Gossip on use.
   pfDB["quests"]["data-turtle"][41682]["obj"]["O"] = { 2020173 }
